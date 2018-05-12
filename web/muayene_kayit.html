@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Muayene Kayıt</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+        <style>
+            .container-fluid {
+                margin-top: 100px;
+                width: 1000px;
+                margin-bottom: 200px;
+            }
+            #hastaTc{
+                width: 470px; 
+                margin-left: 15px;
+            }
+            #tani1{
+                width: 470px;
+                margin-left: 15px;
+
+            }
+            #tani2{
+                width: 470px;
+                margin-left: 15px;
+
+            }
+            #tetkik{
+                width: 470px;
+                margin-left: 15px;
+
+            }
+            .footer {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f2f2f2;
+                color: black;
+                text-align: center;
+            }
+            #sikayet, #hikaye{
+                margin-left: -20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav class="navbar fixed-top navbar-expand-sm bg-primary navbar-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/index.html"><i class="fa fa-home fa-fw"></i> Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hasta_kayit.html"><i class="fa fa-save"></i> Hasta Kaydı</a></li>                                        
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/randevu.html"><i class="fa fa-clock-o"></i> Randevu Ver</a></li>
+                <li class="nav-item active"><a class="nav-link"
+                                               href="/RestProject/muayene_kayit.html"><i class="fa fa-ambulance"></i> Muayene Kayıt</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_bilgi.html"><i class="fa fa-hospital-o"></i> Muayenehane Bilgileri</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hesapyonet.html"><i class="fa fa-user"></i> Hesabı Yönet</a></li>                        
+                <!-- Dropdown -->
+                <li class="nav-item dropdown"><a
+                        class="nav-link dropdown-toggle" href="#" id="navbardrop"
+                        data-toggle="dropdown">Listele</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/RestProject/hastagoster.html">Hastaları
+                            Listele</a> <a class="dropdown-item"
+                                       href="/RestProject/randevugoster.html">Randevuları Listele</a> <a
+                                       class="dropdown-item" href="/RestProject/muayenegoster.html">Muayeneleri
+                            Listele</a>
+                    </div></li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#" id="getKullanici"></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        onclick="logout()"><i class="fa fa-sign-out"></i> Çıkış Yap</a></li>
+            </ul>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <form action="Rest/hastaService/insertMuayene" method="post"
+                          name="form">
+                        <div class="form-group row">
+                            <label for="hastaTc" class="col-6 col-form-label">Hasta:</label> 
+                            <select class="form-control" name="hastaTc" id="hastaTc">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sikayet">Sikayet:</label>
+                            <textarea class="form-control" rows="5" cols="30" name="sikayet"
+                                      id="sikayet"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="hikaye">Hikaye:</label>
+                            <textarea class="form-control" rows="5" cols="30" name="hikaye"
+                                      id="hikaye"></textarea>
+                        </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group row">
+                        <label for="tani1" class="col-2 col-form-label">Tanı 1:</label> <input
+                            class="form-control" type="text" id="tani1" name="tani1">
+                    </div>
+                    <div class="form-group row">
+                        <label for="tani2" class="col-2 col-form-label">Tanı 2:</label> <input
+                            class="form-control" type="text" id="tani2" name="tani2">
+                    </div>
+                    <div class="form-group row">
+                        <label for="tetkik" class="col-2 col-form-label">Tetkik:</label> <input
+                            class="form-control" type="text" id="tetkik" name="tetkik">
+                    </div>
+                    <div class="form-group">
+                        <label for="istemId" class="col-2 col-form-label">İstem:</label> <select class="form-control"
+                                                                                                 name="istemId" id="istemId">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="form-group row">
+                        <input type="button" onclick="return submitForm(this.form)"
+                               class="btn btn-primary" value="Kaydet" />
+                    </div>
+                    </form>
+                    <div class="form-group row">
+                        <button class="btn btn-warning" id="receteBtn" type="submit">Recete
+                            Yaz</button>
+                    </div>  
+                </div>
+            </div>    
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#hastaTc").select2();
+            });
+            function submitForm(form) {
+                var url = form.getAttribute("action");
+                var formData = $(form).serializeArray();
+                $.post(url, formData).done(function (data) {
+                    alert(data);
+
+                    document.getElementById('sikayet').value = "";
+
+                    document.getElementById('tani1').value = "";
+
+                    document.getElementById('tani2').value = "";
+
+                    document.getElementById('hikaye').value = "";
+
+                }).fail(function (xhr, status, error) {
+                    alert(xhr.responseText);
+                });
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    var myArr = JSON.parse(this.responseText);
+
+                    for (var i = 0; i < myArr.length; i++) {
+
+                        var div_data = "<option value=" + myArr[i].tcKimlik + ">"
+                                + myArr[i].tcKimlik + "-" + myArr[i].isim + "-"
+                                + myArr[i].soyIsim + "</option>";
+
+                        $(div_data).appendTo('#hastaTc');
+                    }
+
+                }
+
+            };
+            xmlhttp.open("POST",
+                    "http://localhost:8080/RestProject/Rest/hastaService/hastalar",
+                    true);
+            xmlhttp.send();
+
+            $('#receteBtn')
+                    .click(
+                            function () {
+                                var selected = $('#hastaTc option:selected').text();
+
+                                var slctd = selected.split('-')[0];
+
+                                if (slctd == "") {
+
+                                    alert("Lütfen bilgileri girin!")
+
+                                } else {
+                                    window.location.href = ' http://localhost:8080/RestProject/recete.html?tcKimlik='
+                                            + slctd;
+                                }
+
+                            });
+
+            function logout() {
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/logout";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        window.location.href = "http://localhost:8080/RestProject";
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+            }
+            ;
+
+            $(document).ready(function () {
+
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/getKullanici";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        document.getElementById("getKullanici").innerHTML = xmlHttp.responseText;
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+
+            });
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    var myArr = JSON.parse(this.responseText);
+
+                    for (var i = 0; i < myArr.length; i++) {
+
+                        var div_data = "<option value=" + myArr[i].istem_id + ">"
+                                + myArr[i].istem_adi + "</option>";
+
+                        $(div_data).appendTo('#istemId');
+                    }
+
+                }
+
+            };
+            xmlhttp.open("GET",
+                    "http://localhost:8080/RestProject/Rest/hastaService/istemler",
+                    true);
+            xmlhttp.send();
+        </script>
+        <footer class="footer">
+            <i class="fa fa-copyright"></i><p>Tüm Hakları Saklıdır</p>
+        </footer>
+    </body>
+</html>

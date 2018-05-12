@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Hasta</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+<body>
+	<div class="container py-5">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 class="text-center text-white mb-4">Bootstrap 4 Login Form</h2>
+				<div class="row">
+					<div class="col-md-6 mx-auto">
+
+						<!-- form card login -->
+						<div class="card rounded-0">
+							<div class="card-header">
+								<h3 class="mb-0">Giriş Yap</h3>
+							</div>
+							<div class="card-body">
+								<form class="form" role="form" autocomplete="off" id="formLogin"
+									novalidate="" action="Rest/hastaService/login" method="POST">
+									<div class="form-group">
+										<label for="uname1">Kullanıcı Adı</label> <input type="text"
+											class="form-control form-control-lg rounded-0"
+											name="kullanici" id="kullanici" required="">
+
+									</div>
+									<div class="form-group">
+										<label>Şifre</label> <input type="password"
+											class="form-control form-control-lg rounded-0" id="sifre"
+											name="sifre" required="" autocomplete="new-password">
+
+									</div>
+									<input type="button" class="btn btn-primary btn-lg float-right"
+										id="btnLogin" onclick="return submitForm(this.form)"
+										value="Giriş Yap" />
+								</form>
+							</div>
+							<!--/card-block-->
+						</div>
+						<!-- /form card login -->
+
+					</div>
+				</div>
+				<!--/row-->
+			</div>
+			<!--/col-->
+		</div>
+		<!--/row-->
+	</div>
+	<!--/container-->
+	<script type="text/javascript">
+		function submitForm(form) {
+			var url = form.getAttribute("action");
+			var formData = $(form).serializeArray();
+			$
+					.post(url, formData)
+					.done(
+							function(data) {
+								window.location = "http://localhost:8080/RestProject/index.html";
+							}).fail(function(xhr, status, error) {
+						alert(xhr.responseText);
+
+						document.getElementById("kullanici").value = "";
+
+						document.getElementById("sifre").value = "";
+					});
+		}
+	</script>
+</body>
+</html>

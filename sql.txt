@@ -1,0 +1,80 @@
+ CREATE TABLE nvi (
+  vatandas_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+  vatandas_tc_kimlik LONG DEFAULT NULL,
+  vatandas_isim varchar2(50) DEFAULT NULL,
+  vatandas_soyisim varchar2(50) DEFAULT NULL,
+  vatandas_dogum_tarih varchar2(50) DEFAULT NULL,
+  CONSTRAINT vatandas_pk PRIMARY KEY (vatandas_ID)
+);
+
+CREATE TABLE tblhasta (
+  hasta_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+  hasta_tc_kimlik CLOB DEFAULT NULL,
+  yabanci_hasta_ulke varchar2(50) DEFAULT NULL,
+  yabanci_hasta_pas_no varchar2(50) DEFAULT NULL,
+  hasta_isim varchar2(255) DEFAULT NULL,
+  hasta_soyisim varchar2(255) DEFAULT NULL,
+  hasta_dogum_tarih varchar2(200) DEFAULT NULL,
+  hasta_cinsiyet varchar2(50) DEFAULT NULL,
+  hasta_telefon varchar2(50) DEFAULT NULL,
+  hasta_email varchar2(50) DEFAULT NULL,
+  hasta_meslek varchar2(255) DEFAULT NULL,
+  randevu_ID INTEGER DEFAULT NULL,
+  CONSTRAINT hasta_pk PRIMARY KEY (hasta_ID)
+);
+
+CREATE TABLE `tblhastamuayene` (
+   hasta_muayene_ID GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) INTEGER NOT NULL,
+   hasta_tc_kimlik varchar2(50) DEFAULT NULL,
+   sikayet varchar2(500) DEFAULT NULL,
+   hikaye varchar2(500) DEFAULT NULL,
+   tani1 varchar2(50) DEFAULT NULL,
+   tani2 varchar2(50) DEFAULT NULL,
+   tetkik varchar2(50) DEFAULT NULL,
+   tarih  varchar2(50) DEFAULT NULL,
+   saat varchar2(50) DEFAULT NULL,
+   istem_id INTEGER DEFAULT NULL,
+  CONSTRAINT hastamuayene_pk PRIMARY KEY (hasta_muayene_ID)
+);
+
+CREATE TABLE tblistem (
+  istem_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+  istem_adi varchar2(255) DEFAULT NULL,
+  CONSTRAINT istem_pk PRIMARY KEY (istem_ID)
+)
+
+CREATE TABLE tblkullanicilar (
+  kullanici_ID  INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+  kullanici_adi varchar2(255) DEFAULT NULL,
+  kullanici_sifre varchar2(255) DEFAULT NULL,
+  CONSTRAINT kullanici_pk PRIMARY KEY (kullanici_ID)
+);
+
+CREATE TABLE tblmuayene (
+   muayene_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+   muayene_ad varchar2(100) DEFAULT NULL,
+   muayene_adres varchar2(200) DEFAULT NULL,
+   muayene_email varchar2(200) DEFAULT NULL,
+   muayene_tel varchar2(200) DEFAULT NULL,
+   muayene_fax varchar2(200) DEFAULT NULL,
+  CONSTRAINT muayene_pk PRIMARY KEY (muayene_ID)
+);
+
+CREATE TABLE tblrandevu (
+   randevu_ID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+   randevu_tarih varchar2(50) DEFAULT NULL,
+   randevu_saat varchar2(255) DEFAULT NULL,
+   tc_kimlik LONG DEFAULT NULL,
+  CONSTRAINT randevu_pk PRIMARY KEY (randevu_ID)
+);
+
+CREATE TABLE  tblrecete (
+  `recete_ID` INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) NOT NULL,
+   ilac varchar2(255) DEFAULT NULL,
+   kullanim_sekli varchar2(50) DEFAULT NULL,
+   kutu_adet INTEGER DEFAULT NULL,
+   hasta_tc_kimlik LONG DEFAULT NULL,
+   recete_no INTEGER,
+   tarih varchar2(100)
+  CONSTRAINT recete_pk PRIMARY KEY (recete_ID)
+);

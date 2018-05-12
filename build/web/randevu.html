@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Randevu</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <style>
+            .container {
+                margin-top: 100px;
+                width: 500px;
+            }
+
+            #tcKimlik {
+                width: 380px;
+                margin-left: 30px;
+                max-height: 100px;
+            }
+            .footer {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f2f2f2;
+                color: black;
+                text-align: center;
+            }
+            .randevu-tablo{
+                margin-top: 30px;
+            }
+            .baslik{
+                margin-top: 20px;
+            }
+            #tarih, #saat, #submitBtn, #table, .baslik{
+                margin-left: -20px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar fixed-top navbar-expand-sm bg-primary navbar-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/index.html"><i class="fa fa-home fa-fw"></i>
+                        Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hasta_kayit.html"><i class="fa fa-save"></i> Hasta Kaydı</a></li>
+
+                <li class="nav-item active"><a class="nav-link"
+                                               href="/RestProject/randevu.html"><i class="fa fa-clock-o"></i>
+                        Randevu Ver</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_kayit.html"><i
+                            class="fa fa-ambulance"></i> Muayene Kayıt</a></li>
+
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_bilgi.html"><i
+                            class="fa fa-hospital-o"></i> Muayenehane Bilgileri</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hesapyonet.html"><i class="fa fa-user"></i> Hesabı Yönet</a></li>            
+
+                <!-- Dropdown -->
+                <li class="nav-item dropdown"><a
+                        class="nav-link dropdown-toggle" href="#" id="navbardrop"
+                        data-toggle="dropdown">Listele</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/RestProject/hastagoster.html">Hastaları
+                            Listele</a> <a class="dropdown-item"
+                                       href="/RestProject/randevugoster.html">Randevuları Listele</a> <a
+                                       class="dropdown-item" href="/RestProject/muayenegoster.html">Muayeneleri
+                            Listele</a>
+                    </div></li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        id="getKullanici"></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        onclick="logout()"><i class="fa fa-sign-out"></i> Çıkış Yap</a></li>
+            </ul>
+        </nav>
+        <div class="container">
+            <form action="Rest/hastaService/insertRandevu" method="post"
+                  name="myForm">
+                <div class="form-group row">
+                    <label for="tcKimlik" class="col-4 col-form-label">Tc
+                        Kimlik:</label> <select class="form-control" name="tcKimlik" id="tcKimlik">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label for="tarih" class="col-4 col-form-label">Tarih:</label>
+                    <div class="col-10">
+                        <input class="form-control" type="date" name="tarih" id="tarih">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="saat" class="col-4 col-form-label">Saat:</label>
+                    <div class="col-10">
+                        <select class="form-control" name="saat" id="saat">
+
+                        </select>
+                    </div>
+                </div>
+                <input type="button" onclick="return submitForm(this.form)"
+                       class="btn btn-primary" id="submitBtn" value="Kaydet" />
+            </form>
+            <h3 class="baslik">Günlük Randevular</h3>
+
+            <div class="randevu-tablo">
+                <table class="table" id="table">
+                    <tr>
+                        <th>Id</th>
+                        <th>Tc Kimlik</th>
+                        <th>Ad</th>
+                        <th>Soyad</th>
+                        <th>Saat</th>
+                        <th>Tarih</th>
+                    </tr>
+                    <tr>
+                        <td id="td1"></td>
+                        <td id="td2"></td>
+                        <td id="td3"></td>
+                        <td id="td4"></td>
+                        <td id="td5"></td>
+                        <td id="td6"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script>
+
+            $(document).ready(function () {
+                $("#tcKimlik").select2();
+            });
+
+            $(document).on('change', '#tarih', function () {
+
+                var date = document.getElementById("tarih").value;
+
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/randevuAra/'" + date + "'";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+
+                    }
+                };
+                xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+
+                getSaatler();
+
+            });
+
+            function getSaatler() {
+
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+
+                        console.log(this.responseText);
+
+                        var myArr = JSON.parse(this.responseText);
+
+                        for (var i = 0; i < myArr.length; i++) {
+
+                            var div_data = "<option value=" + myArr[i].saat_id + ">"
+                                    + myArr[i].saat + "</option>";
+
+                            $(div_data).appendTo('#saat');
+                        }
+
+                    }
+
+                };
+                xmlhttp.open("GET",
+                        "http://localhost:8080/RestProject/Rest/hastaService/saatler",
+                        true);
+                xmlhttp.send();
+
+            }
+
+
+            function submitForm(form) {
+                var url = form.getAttribute("action");
+                var formData = $(form).serializeArray();
+                $.post(url, formData).done(function (data) {
+                    alert(data);
+
+                    document.getElementById("tcKimlik").value = "";
+                    document.getElementById("tarih").value = "";
+                    document.getElementById("saat").value = "";
+
+                }).fail(function (xhr, status, error) {
+                    alert(xhr.responseText);
+
+                });
+            }
+
+            $(document)
+                    .ready(
+                            function () {
+
+                                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/getKullanici";
+                                var xmlHttp = new XMLHttpRequest();
+                                xmlHttp.onreadystatechange = function () {
+                                    if (xmlHttp.readyState == 4
+                                            && xmlHttp.status == 200) {
+                                        document.getElementById("getKullanici").innerHTML = xmlHttp.responseText;
+                                    }
+                                };
+                                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                                xmlHttp.send(null);
+
+                            });
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    var myArr = JSON.parse(this.responseText);
+
+                    for (var i = 0; i < myArr.length; i++) {
+
+                        var div_data = "<option value=" + myArr[i].tcKimlik + ">"
+                                + myArr[i].tcKimlik + "-" + myArr[i].isim + "-"
+                                + myArr[i].soyIsim + "</option>";
+
+                        $(div_data).appendTo('#tcKimlik');
+                    }
+
+                }
+
+            };
+            xmlhttp.open("POST",
+                    "http://localhost:8080/RestProject/Rest/hastaService/hastalar",
+                    true);
+            xmlhttp.send();
+
+
+            function logout() {
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/logout";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        window.location.href = "http://localhost:8080/RestProject";
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+            }
+            ;
+
+            var id = "";
+            var tcKimlik = "";
+            var isim = "";
+            var soyisim = "";
+            var tarih = "";
+            var saat = "";
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var myArr = JSON.parse(this.responseText);
+                    for (var i = 0; i < myArr.length; i++) {
+                        id += myArr[i].id + "</br>"
+                        tcKimlik += myArr[i].tcKimlik + "</br>"
+                        isim += myArr[i].hasta_isim + "</br>"
+                        soyisim += myArr[i].hasta_soyisim + "</br>"
+                        saat += myArr[i].saat + "</br>"
+                        tarih += myArr[i].tarih + "</br>"
+                    }
+
+                }
+
+                document.getElementById("td1").innerHTML = id;
+                document.getElementById("td2").innerHTML = tcKimlik;
+                document.getElementById("td3").innerHTML = isim;
+                document.getElementById("td4").innerHTML = soyisim;
+                document.getElementById("td5").innerHTML = saat;
+                document.getElementById("td6").innerHTML = tarih;
+            };
+            xmlhttp
+                    .open(
+                            "POST",
+                            "http://localhost:8080/RestProject/Rest/hastaService/gunlukRandevu",
+                            true);
+            xmlhttp.send();
+
+
+            //Randevu min bugün
+
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById("tarih").setAttribute("min", today);
+
+
+        </script>
+        <footer class="footer">
+            <i class="fa fa-copyright"></i><p>Tüm Hakları Saklıdır</p>
+        </footer>
+    </body>
+</html>

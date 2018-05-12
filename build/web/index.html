@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href='files/fullcalendar.min.css' rel='stylesheet' />
+        <link href='files/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+        <script src='files/moment.min.js'></script>
+        <script src='files/jquery.min.js'></script>
+        <script src='files/fullcalendar.min.js'></script>
+        <script src='files/locale-all.js'></script>
+        <style>
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #ecf6ff;
+            }
+
+            #calendar {
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 0 10px;
+            }
+            .footer {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f2f2f2;
+                color: black;
+                text-align: center;
+            }
+            .container-fluid {
+                margin-top: 100px;
+                margin-bottom: 100px;
+            }
+            #font{
+                width: 1000px;
+                height: 700px;
+                opacity: 0.5;
+            }
+
+        </style>
+    </head>
+    <body>
+        <nav class="navbar fixed-top navbar-expand-sm bg-primary navbar-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a class="nav-link"
+                                               href="/RestProject/index.html"><i class="fa fa-home fa-fw"></i> Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hasta_kayit.html"><i class="fa fa-save"></i> Hasta Kaydı</a></li>                               
+
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/randevu.html"><i class="fa fa-clock-o"></i> Randevu Ver</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_kayit.html"><i class="fa fa-ambulance"></i> Muayene Kayıt</a></li>
+                </li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_bilgi.html"><i class="fa fa-hospital-o"></i> Muayenehane Bilgileri</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hesapyonet.html"><i class="fa fa-user"></i> Hesabı Yönet</a></li>
+                <!-- Dropdown -->
+                <li class="nav-item dropdown"><a
+                        class="nav-link dropdown-toggle" href="#" id="navbardrop"
+                        data-toggle="dropdown">Listele</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/RestProject/hastagoster.html">Hastaları
+                            Listele</a> <a class="dropdown-item"
+                                       href="/RestProject/randevugoster.html">Randevuları Listele</a> <a
+                                       class="dropdown-item" href="/RestProject/muayenegoster.html">Muayeneleri
+                            Listele</a>
+                    </div></li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#" id="getKullanici"></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        onclick="logout()"><i class="fa fa-sign-out"></i> Çıkış Yap</a></li>
+            </ul>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img src="images/font.png" id="font"/>
+                </div>
+                <div class="col-sm-6">
+                    <div id='calendar'>
+
+                    </div>
+                </div>     
+            </div>    
+        </div>
+        <script>
+
+            //Full Calendar
+            $(document).ready(function () {
+
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay,listMonth'
+                    },
+                    defaultDate: '2018-03-12',
+                    locale: 'tr',
+                    buttonIcons: false, // show the prev/next text
+                    weekNumbers: true
+                            // allow "more" link when too many events
+
+                });
+
+                // when the selected option changes, dynamically change the calendar option
+                $('#locale-selector').on('change', function () {
+                    if (this.value) {
+                        $('#calendar').fullCalendar('option', 'locale', this.value);
+                    }
+                });
+            });
+
+            //Kullanıcı İsmini Getir
+            $(document).ready(function () {
+
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/getKullanici";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        document.getElementById("getKullanici").innerHTML = xmlHttp.responseText;
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+
+            });
+
+            //Çıkış Yap
+            function logout() {
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/logout";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        window.location.href = "http://localhost:8080/RestProject";
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+            }
+            ;
+
+        </script>
+        <footer class="footer">
+            <i class="fa fa-copyright"></i><p>Tüm Hakları Saklıdır</p>
+        </footer>
+    </body>
+</html>

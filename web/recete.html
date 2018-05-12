@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Recete</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+        <script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+        <script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            .container {
+                margin-top: 100px;
+                width: 500px;
+                margin-bottom: 100px;
+            }
+            .footer {
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 60px;
+                background-color: #f2f2f2;
+                color: black;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <nav class="navbar fixed-top navbar-expand-sm bg-primary navbar-dark">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/index.html"><i class="fa fa-home fa-fw"></i>
+                        Ana Sayfa</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hasta_kayit.html"><i class="fa fa-save"></i> Hasta Kaydı</a></li>        
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/randevu.html"><i class="fa fa-clock-o"></i>
+                        Randevu Ver</a></li>
+                <li class="nav-item active"><a class="nav-link"
+                                               href="/RestProject/muayene_kayit.html"><i
+                            class="fa fa-ambulance"></i> Muayene Kayıt</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/muayene_bilgi.html"><i
+                            class="fa fa-hospital-o"></i> Muayenehane Bilgileri</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/RestProject/hesapyonet.html"><i class="fa fa-user"></i> Hesabı Yönet</a></li>            
+                <!-- Dropdown -->
+                <li class="nav-item dropdown"><a
+                        class="nav-link dropdown-toggle" href="#" id="navbardrop"
+                        data-toggle="dropdown">Listele</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/RestProject/hastagoster.html">Hastaları
+                            Listele</a> <a class="dropdown-item"
+                                       href="/RestProject/randevugoster.html">Randevuları Listele</a> <a
+                                       class="dropdown-item" href="/RestProject/muayenegoster.html">Muayeneleri
+                            Listele</a>
+                    </div></li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        id="getKullanici"></a></li>
+                <li class="nav-item"><a class="nav-link" href="#"
+                                        onclick="logout()"><i class="fa fa-sign-out"></i> Çıkış Yap</a></li>
+            </ul>
+        </nav>
+        <div class="container">
+            <form action="Rest/hastaService/insertRecete" method="post"
+                  name="form">
+                <div class="form-group row">
+                    <div class="col-10">
+                        <input class="form-control" type="hidden" id="tcKimlik"
+                               name="tcKimlik" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ilac">İlaç:</label> <select class="form-control" name="ilac" id="ilac">
+                        <option></option>
+                        <option value="Parol">Parol</option>
+                        <option value="Aspirin">Aspirin</option>
+                        <option value="Novalgin">Novalgin</option>
+                        <option value="Minoset">Minoset</option>
+                        <option value="Apranax">Apranax</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment">Kullanım Şekli:</label> <select
+                        class="form-control" name="kSekli" id="kSekli">
+                        <option value="3x1">3x1</option>
+                        <option value="3x2">3x2</option>
+                        <option value="3x3">3x3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment">Kutu Adet:</label> <select class="form-control"
+                                                                    name="kadet" id="kadet">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <input type="button" id="add" value="Ekle" class="btn btn-primary"
+                       onclick="Javascript:addRow()"> <input type="button"
+                       onclick="return submitForm(this.form)" class="btn btn-primary"
+                       value="Kaydet" />
+            </form>
+            <div style="margin-top: 10px">
+                <a
+                    href="http://localhost:8080/RestProject/Rest/hastaService/downloadRecete"
+                    class="btn btn-warning">Recete Oluştur</a>
+            </div>
+            <div>
+                <table id="myTableData" class="table">
+                    <tr>
+                        <td><b>Aksiyon</b></td>
+                        <td><b>İlaç</b></td>
+                        <td><b>Kullanım Şekli</b></td>
+                        <td><b>Kutu Adet</b></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script>
+            var TableData = new Array();
+
+            var tcKimlik = location.search.split('tcKimlik=')[1];
+
+            document.getElementById("tcKimlik").value = tcKimlik;
+
+            $(document)
+                    .ready(
+                            function () {
+
+                                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/getKullanici";
+                                var xmlHttp = new XMLHttpRequest();
+                                xmlHttp.onreadystatechange = function () {
+                                    if (xmlHttp.readyState == 4
+                                            && xmlHttp.status == 200) {
+                                        document.getElementById("getKullanici").innerHTML = xmlHttp.responseText;
+                                    }
+                                };
+                                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                                xmlHttp.send(null);
+
+                            });
+
+            function submitForm(form) {
+
+                if (TableData.length <= 0) {
+
+                    alert("Lütfen ilaç ekleyip ondan sonra kayıt yapınız!")
+
+                } else if (document.getElementById('ilac').value == "") {
+
+                    alert("Lütfen İlaç Seçin!")
+
+                    return;
+
+                } else {
+
+                    var url = form.getAttribute("action");
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(TableData) //stringify is important
+                        ,
+                        success: function (d) {
+                            alert(d);
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr);
+                        }
+                    });
+
+                }
+
+            }
+
+            function logout() {
+                var theUrl = "http://localhost:8080/RestProject/Rest/hastaService/logout";
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        window.location.href = "http://localhost:8080/RestProject";
+                    }
+                };
+                xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                xmlHttp.send(null);
+            }
+            ;
+
+            function addRow() {
+
+                var ilac = document.getElementById("ilac");
+                var kSekli = document.getElementById("kSekli");
+                var kadet = document.getElementById("kadet");
+                var table = document.getElementById("myTableData");
+
+                if (ilac.value == "") {
+                    alert("Lütfen ilaç giriniz!")
+                    return;
+                } else {
+
+                    var rowCount = table.rows.length;
+                    var row = table.insertRow(rowCount);
+
+                    row.insertCell(0).innerHTML = '<input type="button" value = "Sil" class="btn btn-danger" onClick="Javacsript:deleteRow(this)">';
+                    row.insertCell(1).innerHTML = ilac.value;
+                    row.insertCell(2).innerHTML = kSekli.value;
+                    row.insertCell(3).innerHTML = kadet.value;
+
+                    $('#myTableData tr').each(function (row, tr) {
+                        TableData[row] = {
+                            "ilac": $(tr).find('td:eq(1)').text(),
+                            "kullanim": $(tr).find('td:eq(2)').text(),
+                            "adet": $(tr).find('td:eq(3)').text(),
+                            "tcKimlik": tcKimlik
+                        }
+                    });
+                    TableData.shift();
+
+                }
+
+            }
+
+            function deleteRow(obj) {
+
+                var index = obj.parentNode.parentNode.rowIndex;
+                var table = document.getElementById("myTableData");
+                table.deleteRow(index);
+
+            }
+        </script>
+        <footer class="footer">
+            <i class="fa fa-copyright"></i><p>Tüm Hakları Saklıdır</p>
+        </footer>
+    </body>
+</html>
